@@ -1,0 +1,584 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2636
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 ArialMT;}
+{\colortbl;\red255\green255\blue255;\red26\green26\blue26;\red255\green255\blue255;\red16\green60\blue192;
+}
+{\*\expandedcolortbl;;\cssrgb\c13333\c13333\c13333;\cssrgb\c100000\c100000\c100000;\cssrgb\c6667\c33333\c80000;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs20 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 import RPi.GPIO as GPIO\
+from time import sleep\
+import time\
+import numpy as np\
+from dataclasses import fields\
+from math import degrees, atan2\
+import smbus\
+import math\
+import cv2\
+import imutils\
+import adafruit_icm20x\
+import board\
+\
+i2c = board.I2C()\
+icm = \'a0adafruit_icm20x.ICM20649(i2c)\
+bus = smbus.SMBus(1)\
+\
+Fungai=0\
+Metro =0\
+Priest=0\
+Period_= 0\
+relay = 14\
+Lord=0\
+Ronald=0\
+distance = 0\
+GPIO.setmode(GPIO.BCM)\
+GPIO.setwarnings(False)\
+GPIO.setup(relay,GPIO.OUT)\
+GPIO.output(relay, GPIO.LOW)\
+TRIG = 23\
+ECHO = 7\
+GPIO.setup(TRIG, GPIO.OUT)\
+GPIO.output(TRIG,0)\
+GPIO.setup(ECHO,\'a0{\field{\*\fldinst{HYPERLINK "http://gpio.in/"}}{\fldrslt \cf4 \ul \ulc4 \strokec4 GPIO.IN}})\
+def Mesut_Eyezil():\
+\'a0 \'a0 GPIO.output(TRIG, True)\
+\'a0 \'a0 time.sleep(0.1)\
+\'a0 \'a0 GPIO.output(TRIG, False)\
+\'a0 \'a0 start = time.time()\
+\'a0 \'a0 end = time.time()\
+\'a0 \'a0 while GPIO.input(ECHO) == 0:\
+\'a0 \'a0 \'a0 \'a0 start = time.time()\
+\'a0 \'a0 while GPIO.input(ECHO) == 1:\
+\'a0 \'a0 \'a0 \'a0 end = time.time()\
+\
+\'a0 \'a0 duration = end - start\
+\'a0 \'a0 distance = duration * 17150\
+\'a0 \'a0 globals()["distance"] = round(distance)\
+\'a0 \'a0 return distance\
+\
+def start():\
+\'a0 \'a0 GPIO.output(relay, GPIO.HIGH)\
+\
+def Johnno():\
+\'a0 \'a0 gx,gy, gz = icm.gyro\
+\'a0 \'a0 globals()["ZValue"]=gz\
+\'a0 \'a0 if -0.05<ZValue<0.05:\
+\'a0 \'a0 \'a0print(' ')\
+\'a0 \'a0 else:\
+\'a0 \'a0 \'a0globals()["Priest"]=Priest+ZValue\
+\'a0 \'a0 \'a0return Priest\
+\
+def stop():\
+\'a0 \'a0 GPIO.output(relay,GPIO.LOW)\
+\
+GPIO.setup(27,GPIO.OUT)\
+pwm= GPIO.PWM(27,50)\
+\
+pwm.start(0)\
+\
+Greg = 7.5\
+Right_Turn = 1.8\
+Left_Turn = 10\
+\
+#pwm.ChangeDutyCycle(7)\
+\
+angle_red=0\
+\
+angle_green=0\
+\
+Red_Block = 0\
+\
+Green_Block = 0\
+\
+def See_Shit(image):\
+\
+\'a0 \'a0 blurred_image = cv2.GaussianBlur(image,(5,5), 0)\
+\'a0 \'a0 hsv = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)\
+\'a0 \'a0 low_green = np.array([50,70,70])\
+\'a0 \'a0 up_green = np.array([102,255,255])\
+\'a0 \'a0 green_mask = cv2.inRange(hsv,low_green,up_green)\
+\'a0 \'a0 green = cv2.bitwise_and(image,image, mask = green_mask)\
+\'a0 \'a0 low_red = np.array([161,155,84])\
+\'a0 \'a0 up_red = np.array([179,255,255])\
+\'a0 \'a0 red_mask= cv2.inRange(hsv,low_red,up_red)\
+\'a0 \'a0 red=cv2.bitwise_and(image,image,mask=red_mask)\
+\'a0 \'a0 cnts = cv2.findContours(red_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)\
+\'a0 \'a0 cnts = imutils.grab_contours(cnts)\
+\'a0 \'a0 cnts2 = cv2.findContours(green_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)\
+\'a0 \'a0 cnts2 = imutils.grab_contours(cnts2)\
+\
+\'a0 \'a0 for c in cnts:\
+\
+\'a0 \'a0 \'a0 \'a0 \'a0areaRooi = cv2.contourArea(c)\
+\'a0 \'a0 \'a0 \'a0 \'a0if areaRooi > 500:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0x,y,w,h = cv2.boundingRect(c)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0cv2.rectangle(red,(x,y),(x+w,y+h), (255,0,0), 3)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Block"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Period_"]=areaRooi\
+\
+\
+\'a0 \'a0 for c in cnts2:\
+\'a0 \'a0 \'a0 \'a0 \'a0areaGroen = cv2.contourArea(c)\
+\'a0 \'a0 \'a0 \'a0 \'a0if areaGroen > 500:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0x,y,w,h = cv2.boundingRect(c)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0cv2.rectangle(green,(x,y),(x+w,y+h), (255,0,0), 3)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Block"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Lord"]= areaGroen\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print(areaGroen)\
+\
+\'a0 \'a0 result = (green + red)\
+\'a0 \'a0 cv2.imshow('Through Ball Of Dreams',result)\
+\'a0 \'a0 cv2.waitKey(1)\
+\'a0 \'a0 #globals()["Metro"]=Metro + 1\
+\
+def Red_Sent():\
+\'a0 \'a0 if Period_ > 3569:\
+\'a0 \'a0 \'a0 \'a0 #CodeForTurningAwayFromRED\
+\'a0 \'a0 \'a0 \'a0 globals()["Red_Block"]=0\
+\
+\
+\
+\
+\
+def Green_Sent():\
+\'a0 \'a0 if Lord > 3569:\
+\'a0 \'a0 \'a0 \'a0 #CodeForTurningAwayFromGreen\
+\'a0 \'a0 \'a0 \'a0 globals()["Green_Block"]=0\
+\
+\
+Water=1\
+Collin=0\
+\
+\
+#sleep(1)\
+Mesut_Eyezil()\
+cap = cv2.VideoCapture(0)\
+ret,image = cap.read()\
+image = cv2.flip(image, 0)\
+\
+def PlsWork():\
+\'a0 \'a0 See_Shit(image)\
+\'a0 \'a0 if Red_Block==1:\
+\'a0 \'a0 \'a0#Red_Sent()\
+\'a0 \'a0 \'a0print('In Paris')\
+\'a0 \'a0 \'a0#if Red_Block==0:\
+\'a0 \'a0 if Green_Block==1:\
+\'a0 \'a0 \'a0print('Muteba')\
+\'a0 \'a0 else:\
+\'a0 \'a0 \'a0print('Sibu')\
+\
+cap.set(3,320)\
+cap.set(4,240)\
+cap.set(5,160)\
+\
+\
+\
+\
+\
+\
+\
+#while Metro == 0:\
+\
+\'a0 \'a0 #print('Rob Beezy')\
+\
+def WhiteGirl():\
+\'a0 \'a0 ret,image = cap.read()\
+\'a0 \'a0 image = cv2.flip(image, 0)\
+\'a0 \'a0 blurred_image = cv2.GaussianBlur(image,(5,5), 0)\
+\'a0 \'a0 hsv = cv2.cvtColor(blurred_image, cv2.COLOR_BGR2HSV)\
+\'a0 \'a0 low_green = np.array([25,100,100])\
+\'a0 \'a0 up_green = np.array([90,255,255])\
+\'a0 \'a0 green_mask = cv2.inRange(hsv,low_green,up_green)\
+\'a0 \'a0 green = cv2.bitwise_and(image,image, mask = green_mask)\
+\'a0 \'a0 low_red = np.array([161,155,84])\
+\'a0 \'a0 up_red = np.array([179,255,255])\
+\'a0 \'a0 red_mask= cv2.inRange(hsv,low_red,up_red)\
+\'a0 \'a0 red=cv2.bitwise_and(image,image,mask=red_mask)\
+\'a0 \'a0 cnts = cv2.findContours(red_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)\
+\'a0 \'a0 cnts = imutils.grab_contours(cnts)\
+\'a0 \'a0 cnts2 = cv2.findContours(green_mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)\
+\'a0 \'a0 cnts2 = imutils.grab_contours(cnts2)\
+\
+\'a0 \'a0 for c in cnts:\
+\'a0 \'a0 \'a0areaRooi = cv2.contourArea(c)\
+\'a0 \'a0 \'a0if areaRooi > 500:\
+\'a0 \'a0 \'a0 \'a0 \'a0x,y,w,h = cv2.boundingRect(c)\
+\'a0 \'a0 \'a0 \'a0 \'a0cv2.rectangle(red,(x,y),(x+w,y+h), (255,0,0), 3)\
+\'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Block"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0globals()["Period_"]=areaRooi\
+\
+\
+\'a0 \'a0 for c in cnts2:\
+\'a0 \'a0 \'a0areaGroen = cv2.contourArea(c)\
+\'a0 \'a0 \'a0if areaGroen > 500:\
+\'a0 \'a0 \'a0 \'a0 \'a0x,y,w,h = cv2.boundingRect(c)\
+\'a0 \'a0 \'a0 \'a0 \'a0cv2.rectangle(green,(x,y),(x+w,y+h), (255,0,0), 3)\
+\'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Block"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0globals()["Lord"]= areaGroen\
+\
+Green_Interupt=0\
+Red_Interupt=0\
+Awe_Dala=0\
+#Avoid Block Function\
+def Avoid_Block():\
+\'a0 \'a0 \'a0while Red_Block==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0print('69')\
+\'a0 \'a0 \'a0 \'a0 \'a0if Period_ >900:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Right_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0else:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Block"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Interupt"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0Johnno(), sleep(0.2)\
+\
+\'a0 \'a0 \'a0 \'a0 \'a0while Ronald==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print('31')\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if (-0.6<Priest) and (Priest<0.6):\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if distance<110:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Block"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Interupt"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg-1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Block"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Period_"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Priest"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0else:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Left_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if distance<110:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Block"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Interupt"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\
+\
+\'a0 \'a0 \'a0while Green_Block==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0print('420')\
+\'a0 \'a0 \'a0 \'a0 \'a0if Lord >300:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Left_Turn), WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0else:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Block"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Interupt"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil(), WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0while Ronald==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print('31')\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if (-0.6<Priest) and (Priest<0.6):\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if distance<80:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Block"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Interupt"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg-0.35)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Block"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Lord"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Priest"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0else:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Right_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if distance<80:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Ronald"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Block"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Interupt"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\
+\
+\
+start()\
+while True:\
+\'a0 \'a0 globals()['Zyi']=0\
+\'a0 \'a0 globals()["SaySay"]=0\
+\'a0 \'a0 globals()["Mtha"]=0\
+\'a0 \'a0 globals()["PiTop"]=0\
+\'a0 \'a0 globals()["Stance"]=0\
+\'a0 \'a0 WhiteGirl()\
+\
+\
+\
+\
+\'a0 \'a0 #Right Turn Cycle\
+\
+\'a0 \'a0 while Water == 1:\
+\'a0 \'a0 \'a0 \'a0 WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 while Zyi == 0:\
+\'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0if Awe_Dala==0:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Avoid_Block()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if Awe_Dala==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 #test tomorrow\
+\'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0if distance < 97:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["SaySay"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Awe_Dala"]=0\
+\
+\'a0 \'a0 \'a0 \'a0 \'a0while SaySay == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("angle", angle\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("right", Right)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print(Priest)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Right_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if Priest<-11.35:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if Red_Interupt==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg+0.65)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Red_Interupt"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0elif Green_Interupt==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg-0.8)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Green_Interupt"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0else:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg+0.15)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0SaySay = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Zyi = 1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Priest"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0if Zyi == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 print(Zyi)\
+\'a0 \'a0 \'a0 \'a0 #print('Cool')\
+\'a0 \'a0 \'a0 \'a0 Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 #Turn\
+\'a0 \'a0 \'a0 \'a0 while Zyi == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0if Red_Block==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print('69')\
+\'a0 \'a0 \'a0 \'a0 \'a0if Green_Block==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print('420')\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0if distance < 95:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Mtha"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0while Mtha == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("angle", angle\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("right", Right)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Right_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if Priest<-11.45:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg+0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0SaySay = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Zyi = 2\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Priest"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0if Zyi == 2:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\
+\
+\'a0 \'a0 \'a0 \'a0 while Zyi == 2:\
+\'a0 \'a0 \'a0 \'a0 \'a0if Red_Block==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print('69')\
+\'a0 \'a0 \'a0 \'a0 \'a0if Green_Block==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print('420')\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0if distance < 90:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Stance"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0while Stance == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("angle", angle\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("right", Right)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Right_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if Priest<-11.6:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg-0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Stance = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Zyi = 3\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Priest"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0if Zyi == 3:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\
+\'a0 \'a0 \'a0 \'a0 while Zyi == 3:\
+\'a0 \'a0 \'a0 \'a0 \'a0if Red_Block==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print('69')\
+\'a0 \'a0 \'a0 \'a0 \'a0if Green_Block==1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print('420')\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0if distance < 90:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["PiTop"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0while PiTop == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("angle", angle\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("right", Right)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Johnno()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print(Priest)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Right_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if Priest<-11.48:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg-0.05)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0PiTop = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Zyi = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0WhiteGirl()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Priest"]=0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Fungai"]=Fungai+1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0while Fungai==3 :\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0stop()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0if Zyi == 0:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\
+\
+\'a0 \'a0 \'a0 \'a0 #print('collected')\
+\
+\
+\
+\
+\
+\'a0 \'a0 #Left Turn Cycle\
+\'a0 \'a0 while Water == 2:\
+\'a0 \'a0 \'a0 \'a0 pwm.ChangeDutyCycle(Greg)\
+\'a0 \'a0 \'a0 \'a0 #print("Indian")\
+\'a0 \'a0 \'a0 \'a0 #print(light_intensity)\
+\'a0 \'a0 \'a0 \'a0 while Zyi == 0:\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0if distance < 80:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["SaySay"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0while SaySay == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("angle", angle\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("right", Right)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Moderator()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Left_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Asian()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print(angle)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if (Left-6)< angle <(Left+6):\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0SaySay = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Zyi = 1\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0if Zyi == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 print(Zyi)\
+\'a0 \'a0 \'a0 \'a0 #print('Cool')\
+\'a0 \'a0 \'a0 \'a0 Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 #Turn\
+\'a0 \'a0 \'a0 \'a0 while Zyi == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0if distance < 80:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Mtha"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0while Mtha == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("angle", angle\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("right", Right)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Moderator()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Left_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Asian()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print(angle)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if (Back-6)< angle <(Back+6):\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg- 0.2)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Mtha = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Zyi = 2\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0if Zyi == 2:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\
+\'a0 \'a0 \'a0 \'a0 #print('calm')\
+\'a0 \'a0 \'a0 \'a0 Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 #Turn\
+\'a0 \'a0 \'a0 \'a0 while Zyi == 2:\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0if distance < 80:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["Stance"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0while Stance == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("angle", angle\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("right", Right)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Moderator()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Left_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Asian()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print(angle)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if (Right-6)< angle <(Right+6):\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg+0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Stance = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Zyi = 3\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0if Zyi == 3:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\
+\'a0 \'a0 \'a0 \'a0 #print('and')\
+\'a0 \'a0 \'a0 \'a0 Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 #Turn\
+\
+\'a0 \'a0 \'a0 \'a0 while Zyi == 3:\
+\'a0 \'a0 \'a0 \'a0 \'a0Mesut_Eyezil()\
+\'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0if distance < 80:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0globals()["PiTop"]=1\
+\'a0 \'a0 \'a0 \'a0 \'a0while PiTop == 1:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("angle", angle\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0#print("right", Right)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Moderator()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Left_Turn)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Asian()\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(0.1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0print(angle)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0if (Straight-6)< angle <(Straight+6):\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0pwm.ChangeDutyCycle(Greg- 0.2)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0sleep(1)\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0PiTop = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0Zyi = 0\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 \'a0if Zyi == 0:\
+\'a0 \'a0 \'a0 \'a0 \'a0 \'a0 \'a0break\
+\'a0 \'a0 \'a0 \'a0 #print('collected')}
